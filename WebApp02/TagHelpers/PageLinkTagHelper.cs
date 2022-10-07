@@ -27,7 +27,7 @@ namespace WebApp02.TagHelpers
             output.TagName = "div";
 
             TagBuilder tag = new("ul");
-            tag.AddCssClass("pagination");
+            tag.AddCssClass("pagination mb-0");
 
             TagBuilder currentItem = CreateTag(PageModel.PageNumber, "current-");
             if (PageModel.HasPreviousPage)

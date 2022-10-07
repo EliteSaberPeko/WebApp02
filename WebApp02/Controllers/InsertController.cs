@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp02.Models;
 using WebApp02.ViewModel;
 using System.Linq;
+using WebApp02.Utils;
 
 namespace WebApp02.Controllers
 {
@@ -45,18 +46,19 @@ namespace WebApp02.Controllers
         [HttpGet]
         public IActionResult Autor()
         {
+            PageViewModel page = Pages.GetPageViewModelAndItems(_db.Autors.AsQueryable(), 1, out List<Autor> items);
             InsertAutorViewModel vm = new()
             {
                 Autor = new Autor(),
-                ListAutors = _db.Autors.AsEnumerable()
+                ListAutors = items,
+                Page = page
             };
-            GetAutorsPage(ref vm);
             return View(vm);
         }
         [HttpPost]
         public IActionResult Autor(InsertAutorViewModel vm, int page = 1)
         {
-            var autors = _db.Autors.AsEnumerable();
+            var autors = _db.Autors.AsQueryable();
 
             vm.Autor ??= new Autor();
             vm.Autor.BirthDate = vm.Autor.BirthDate.ToUniversalTime();
@@ -73,26 +75,17 @@ namespace WebApp02.Controllers
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
-            vm.ListAutors = autors;
-            GetAutorsPage(ref vm, page);
+            vm.Page = Pages.GetPageViewModelAndItems(autors, page, out var items);
+            vm.ListAutors = items;
             return View(vm);
         }
         public IActionResult ListAutorsPartial(int page = 1)
         {
             InsertAutorViewModel vm = new InsertAutorViewModel();
-            GetAutorsPage(ref vm, page);
-            return PartialView(vm);
-        }
-        private void GetAutorsPage(ref InsertAutorViewModel vm, int page = 1)
-        {
-            int pageSize = 1;
             IQueryable<Autor> source = _db.Autors;
-            var count = source.Count();
-            var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            PageViewModel pageViewModel = new(count, page, pageSize);
-            vm.Page = pageViewModel;
+            vm.Page = Pages.GetPageViewModelAndItems(source, page, out var items);
             vm.ListAutors = items;
+            return PartialView(vm);
         }
         private InsertBookViewModel GetInsertBookViewModel(ref InsertBookViewModel vm)
         {
