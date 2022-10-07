@@ -75,28 +75,11 @@ namespace WebApp02.Controllers
             }
             vm.ListAutors = autors;
             GetAutorsPage(ref vm, page);
-            //vm.Books = new SelectList(booklist, "Id", "Title", booklist.Where(x => vm.BookIds.Contains(x.Id)));
             return View(vm);
         }
-        public IActionResult ListAutorsPartial(/*string page = "1"*/ int page = 1)
+        public IActionResult ListAutorsPartial(int page = 1)
         {
-            //int pageSize = 2;
-            //IQueryable<Autor> source = _db.Autors;
-            //var count = source.Count();
-            //var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            //PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-            //InsertAutorViewModel vm = new()
-            //{
-            //    //ListAutors = _db.Autors.AsEnumerable()
-            //    Page = pageViewModel,
-            //    ListAutors = items
-            //};
             InsertAutorViewModel vm = new InsertAutorViewModel();
-            /*_ = int.TryParse(page, out int number);
-            if (number == 0)
-                number = 1;
-            GetAutorsPage(ref vm, number);*/
             GetAutorsPage(ref vm, page);
             return PartialView(vm);
         }
@@ -148,11 +131,6 @@ namespace WebApp02.Controllers
                 return RedirectToAction("Index", "Home");
             }
             GetInsertBookViewModel(ref vm);
-            //vm.AutorsIds ??= new List<int>();
-            //vm.GenresIds ??= new List<int>();
-            /*vm.PublishingHouseSelected = vm.PublishingHouseId;
-            vm.AutorsSelected = vm.AutorsIds ?? new List<int>();
-            vm.GenresSelected = vm.GenresIds ?? new List<int>();*/
             return View(vm);
         }
         #region Поиск автора

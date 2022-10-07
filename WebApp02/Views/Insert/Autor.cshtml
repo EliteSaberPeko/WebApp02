@@ -24,18 +24,7 @@
     </div>
     <button class="btn btn-primary" type="submit">Сохранить</button>
 </form>
-<div class="card">
-    <details open>
-        <summary class="card-header">Список авторов</summary>
-        <ul class="list-group list-group-flush">
-            @foreach(var item in Model.ListAutors)
-            {
-                <li class="list-group-item">@item.FullName | @item.BirthDate.ToLongDateString()</li>
-            }
-        </ul>
-    </details >
-</div>
-<div class="row pr-3 pl-3" id="panel">
+<div id="panel">
     @Html.Partial("ListAutorsPartial")
 </div>
 @section Scripts{
