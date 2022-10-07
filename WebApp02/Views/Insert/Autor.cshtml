@@ -40,32 +40,6 @@
 </div>
 @section Scripts{
     <script type="text/javascript">
-        $(document).on('click', '#previous-page,#next-page', function(){
-            let page = $(this).val();
-            changePage(page);
-        });
-        function changePage(page){
-
-            $.ajax({
-                url: '@Url.Action("ListAutorsPartial")',
-                //url: '@Url.Action("Autor")',
-                type: 'GET',
-                cache: false,
-                data: {"page": page},
-                success: function (data) {
-                    $('#panel').html(data);
-                },
-                failure: function (response) {
-                    alert("failure");
-                    console.log(response);
-                },
-                error: function (response) {
-                    alert("error");
-                    console.log(response);
-                },
-            });
-        }
-
-
+        ChangePage('@Url.Action("ListAutorsPartial")');
     </script>
 }

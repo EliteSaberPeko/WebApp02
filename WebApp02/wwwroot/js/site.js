@@ -29,3 +29,26 @@ function searchAutor(ids, arrayIds, url) {
         },
     });
 }
+
+function ChangePage(url) {
+    $(document).on('click', '#previous-page,#next-page', function () {
+        let page = $(this).val();
+        $.ajax({
+            url: url,
+            type: 'POST',
+            cache: false,
+            data: { "page": page },
+            success: function (data) {
+                $('#panel').html(data);
+            },
+            failure: function (response) {
+                alert("failure");
+                console.log(response);
+            },
+            error: function (response) {
+                alert("error");
+                console.log(response);
+            },
+        });
+    });
+}
