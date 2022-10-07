@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Autor>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div>
+    @foreach(var m in Model)
+    {
+        <p>@m.LastName @m.FirstName @m.Patronymic</p>
+    }
+</div>
+
+<div class="mb-3">
+    <a asp-action="PublishingHouse" asp-controller="Insert" class="btn btn-outline-secondary">Добавить издательство</a>
+</div>
+<div class="mb-3">
+    <a asp-action="Autor" asp-controller="Insert" class="btn btn-outline-secondary">Добавить нового автора</a>
+</div>
+<div class="mb-3">
+    <a asp-action="Book" asp-controller="Insert" class="btn btn-outline-secondary">Добавить новую книгу</a>
+</div>
+

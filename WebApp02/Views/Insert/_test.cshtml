@@ -1,0 +1,8 @@
+﻿@model testViewModel
+
+    <div class="form-floating mb-3">
+        <form method="post" asp-action="GetS" asp-controller="Insert" class="needs-validation">
+        <select class="form-select" size=10 multiple asp-for=Autors asp-items=@Model?.Autors></select>
+        <button class="btn btn-primary" type="submit">Save</button>
+        </form>
+    </div>

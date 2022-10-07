@@ -1,0 +1,22 @@
+﻿@model InsertPublishingHouseViewModel
+
+<form method="post" asp-action="PublishingHouse" asp-controller="Insert" class="needs-validation">
+    <div asp-validation-summary=All></div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control has-validation" asp-for="PublishingHouse.Name" placeholder="Введите название" value="@Model?.PublishingHouse.Name">
+        
+        <button class="btn btn-outline-success" type="submit">Сохранить</button>
+    </div>
+    <span asp-validation-for="PublishingHouse.Name" />
+</form>
+<div class="card">
+    <details open>
+        <summary class="card-header">Список издательств</summary>
+        <ul class="list-group list-group-flush">
+            @foreach(var item in Model.AllPublishingHouses)
+            {
+                <li class="list-group-item">@item.Name</li>
+            }
+        </ul>
+    </details >
+</div>

@@ -1,0 +1,84 @@
+﻿@model InsertBookViewModel
+
+<form method="post" asp-action="Book" asp-controller="Insert" class="needs-validation">
+    <div asp-validation-summary=All></div>
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control has-validation" asp-for="Book.Title" value="@Model?.Book.Title">
+        <label asp-for=Book.Title></label>
+        <span asp-validation-for="Book.Title" />
+    </div>
+    <div class="form-floating mb-3">
+        <select class="form-select" asp-for=PublishingHouseId>
+            @foreach(var item in Model.PublishingHouses)
+            {
+                if (Model.PublishingHouseId == item.Key)
+                {
+                    <option value=@item.Key selected>@item.Value</option>
+                }
+                else
+                {
+                    <option value=@item.Key>@item.Value</option>
+                }
+            }
+        </select>
+        <label asp-for=Book.PublishingHouse></label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <input type="number" min=0 max=9999 step=1 class="form-control has-validation" asp-for="Book.PublicationYear" value="@Model?.Book.PublicationYear">
+        <label asp-for=Book.PublicationYear></label>
+        <span asp-validation-for="Book.PublicationYear" />
+    </div>
+    <div class="form-floating mb-3">
+        <textarea class="form-control has-validation" asp-for="Book.Description" value="@Model?.Book.Description"></textarea>
+        <label asp-for=Book.Description></label>
+        <span asp-validation-for="Book.Description" />
+    </div>
+    <div class="form-floating mb-3">
+        <input type="number" min=0 class="form-control has-validation" asp-for="Book.Count" value="@Model?.Book.Count">
+        <label asp-for=Book.Count></label>
+        <span asp-validation-for="Book.Count" />
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" min=0 step=0.01 class="form-control has-validation" asp-for="Book.Price" value="@Model?.Book.Price" onkeyup="this.value = this.value.replace(/[^\d,]/g,'');">
+        <label asp-for=Book.Price></label>
+        <span asp-validation-for="Book.Price" />
+    </div>
+    <div class="form-group mb-3">
+        <details open>
+            <summary class="input-group-text">Список авторов</summary>
+            <select class="form-select" size="5" multiple asp-for=AutorsIds>
+                @foreach(var item in Model.Autors)
+                {
+                    if (Model.AutorsIds.Contains(item.Key))
+                    {
+                        <option selected value=@item.Key>@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value=@item.Key>@item.Value</option>
+                    }
+                }
+            </select>
+        </details>
+    </div>
+    <div class="form-group mb-3">
+        <details open>
+            <summary class="input-group-text">Список жанров</summary>
+            <select class="form-select" size="5" multiple asp-for=GenresIds>
+                @foreach(var item in Model.Genres)
+                {
+                    if (Model.GenresIds.Contains(item.Key))
+                    {
+                        <option selected value=@item.Key>@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value=@item.Key>@item.Value</option>
+                    }
+                }
+            </select>
+        </details>
+    </div>
+    <button class="btn btn-primary" type="submit">Сохранить</button>
+</form>

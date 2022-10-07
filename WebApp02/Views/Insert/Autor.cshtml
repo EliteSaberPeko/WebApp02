@@ -1,0 +1,71 @@
+﻿@model InsertAutorViewModel
+
+<form method="post" asp-action="Autor" asp-controller="Insert" class="needs-validation mb-3">
+    <div asp-validation-summary=All></div>
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control has-validation" asp-for="Autor.LastName" placeholder="Введите фамилию" value="@Model?.Autor.LastName">
+        <label asp-for=Autor.LastName></label>
+        <span asp-validation-for="Autor.LastName" />
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control has-validation" asp-for="Autor.FirstName" placeholder="Введите имя" value="@Model?.Autor.FirstName">
+        <label for="FirstName" asp-for=Autor.FirstName></label>
+        <span asp-validation-for="Autor.FirstName" />
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control has-validation" asp-for="Autor.Patronymic" placeholder="Введите отчество" value="@Model?.Autor.Patronymic">
+        <label asp-for=Autor.Patronymic></label>
+        <span asp-validation-for="Autor.Patronymic" />
+    </div>
+    <div class="form-floating mb-3">
+        <input type="date" class="form-control has-validation" asp-for="Autor.BirthDate" placeholder="Введите дату рождения" value="@Model?.Autor.BirthDate">
+        <label asp-for=Autor.BirthDate></label>
+        <span asp-validation-for="Autor.BirthDate" />
+    </div>
+    <button class="btn btn-primary" type="submit">Сохранить</button>
+</form>
+<div class="card">
+    <details open>
+        <summary class="card-header">Список авторов</summary>
+        <ul class="list-group list-group-flush">
+            @foreach(var item in Model.ListAutors)
+            {
+                <li class="list-group-item">@item.FullName | @item.BirthDate.ToLongDateString()</li>
+            }
+        </ul>
+    </details >
+</div>
+<div class="row pr-3 pl-3" id="panel">
+    @Html.Partial("ListAutorsPartial")
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).on('click', '#previous-page,#next-page', function(){
+            let page = $(this).val();
+            changePage(page);
+        });
+        function changePage(page){
+
+            $.ajax({
+                url: '@Url.Action("ListAutorsPartial")',
+                //url: '@Url.Action("Autor")',
+                type: 'GET',
+                cache: false,
+                data: {"page": page},
+                success: function (data) {
+                    $('#panel').html(data);
+                },
+                failure: function (response) {
+                    alert("failure");
+                    console.log(response);
+                },
+                error: function (response) {
+                    alert("error");
+                    console.log(response);
+                },
+            });
+        }
+
+
+    </script>
+}

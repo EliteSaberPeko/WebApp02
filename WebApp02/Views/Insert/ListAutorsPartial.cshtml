@@ -1,0 +1,19 @@
+﻿@model InsertAutorViewModel
+
+<div class="card">
+    <details open>
+        <summary class="card-header">Список авторов</summary>
+        <ul class="list-group list-group-flush">
+            @foreach(var item in Model.ListAutors)
+            {
+                <li class="list-group-item">
+                    <div class="d-flex">
+                        <div class="me-auto">@item.FullName</div>
+                        <div>@item.BirthDate.ToLongDateString()</div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </details >
+</div>
+<page-link page-model="Model.Page" page-action="ListAutorsPartial"></page-link>
