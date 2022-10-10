@@ -1,0 +1,19 @@
+﻿@model InsertPublishingHouseViewModel
+
+<div class="card">
+    <details open>
+        <summary class="card-header">Список издательств</summary>
+        <ul class="list-group list-group-flush">
+            @foreach(var item in Model.ListPublishingHouses)
+            {
+                <li class="list-group-item">
+                    <div class="d-flex">
+                        <div class="me-auto">@item.Name</div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <hr class="mb-0 mt-1" />
+        <page-link page-model="Model.Page" page-action="ListPublishingHousesPartial"></page-link>
+    </details >
+</div>

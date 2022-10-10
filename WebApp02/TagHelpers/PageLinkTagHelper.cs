@@ -48,6 +48,7 @@ namespace WebApp02.TagHelpers
         {
             TagBuilder item = new TagBuilder("li");
             TagBuilder link = new TagBuilder("button");
+            link.Attributes["type"] = "button";
             if (pageNumber == PageModel.PageNumber)
                 item.AddCssClass("active");
             else

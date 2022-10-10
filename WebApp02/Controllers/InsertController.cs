@@ -20,28 +20,40 @@ namespace WebApp02.Controllers
         [HttpGet]
         public IActionResult PublishingHouse()
         {
+            PageViewModel page = Pages.GetPageViewModelAndItems(_db.PublishingHouses.AsQueryable(), 1, out var items);
             InsertPublishingHouseViewModel model = new()
             {
                 PublishingHouse = new PublishingHouse(),
-                AllPublishingHouses = _db.PublishingHouses.AsEnumerable()
+                ListPublishingHouses = items,
+                Page = page
             };
             return View(model);
         }
         [HttpPost]
-        public IActionResult PublishingHouse(InsertPublishingHouseViewModel model)
+        public IActionResult PublishingHouse(InsertPublishingHouseViewModel vm, int page = 1)
         {
+            var pubHouses = _db.PublishingHouses.AsQueryable();
             if (ModelState.IsValid)
             {
-                _db.PublishingHouses.Add(model.PublishingHouse);
+                _db.PublishingHouses.Add(vm.PublishingHouse);
                 _db.SaveChanges();
-                model = new()
+                vm = new()
                 {
                     PublishingHouse = new PublishingHouse()
                 };
                 //return RedirectToAction("Index", "Home");
             }
-            model.AllPublishingHouses = _db.PublishingHouses.AsEnumerable();
-            return View(model);
+            vm.Page = Pages.GetPageViewModelAndItems(pubHouses, page, out var items);
+            vm.ListPublishingHouses = items;
+            return View(vm);
+        }
+        public IActionResult ListPublishingHousesPartial(int page = 1)
+        {
+            InsertPublishingHouseViewModel vm = new();
+            IQueryable<PublishingHouse> source = _db.PublishingHouses;
+            vm.Page = Pages.GetPageViewModelAndItems(source, page, out var items);
+            vm.ListPublishingHouses = items;
+            return PartialView("ListPublishingHousesPartial", vm);
         }
         [HttpGet]
         public IActionResult Autor()

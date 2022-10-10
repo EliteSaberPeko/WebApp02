@@ -7,16 +7,14 @@
         
         <button class="btn btn-outline-success" type="submit">Сохранить</button>
     </div>
-    <span asp-validation-for="PublishingHouse.Name" />
+    <span asp-validation-for="PublishingHouse.Name"></span>
 </form>
-<div class="card">
-    <details open>
-        <summary class="card-header">Список издательств</summary>
-        <ul class="list-group list-group-flush">
-            @foreach(var item in Model.AllPublishingHouses)
-            {
-                <li class="list-group-item">@item.Name</li>
-            }
-        </ul>
-    </details >
+
+<div id="panel">
+    @await Html.PartialAsync("ListPublishingHousesPartial")
 </div>
+@section Scripts{
+    <script type="text/javascript">
+        ChangePage('@Url.Action("ListPublishingHousesPartial")');
+    </script>
+}

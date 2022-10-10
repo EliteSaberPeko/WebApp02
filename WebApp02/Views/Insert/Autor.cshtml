@@ -22,10 +22,10 @@
         <label asp-for=Autor.BirthDate></label>
         <span asp-validation-for="Autor.BirthDate" />
     </div>
-    <button class="btn btn-primary" type="submit">Сохранить</button>
+    <button class="btn btn-outline-success" type="submit">Сохранить</button>
 </form>
 <div id="panel">
-    @Html.Partial("ListAutorsPartial")
+    @await Html.PartialAsync("ListAutorsPartial")
 </div>
 @section Scripts{
     <script type="text/javascript">
