@@ -17,6 +17,8 @@ namespace WebApp02.Controllers
             _logger = logger;
             _db = context;
         }
+
+        #region PublishingHouse
         [HttpGet]
         public IActionResult PublishingHouse()
         {
@@ -53,8 +55,11 @@ namespace WebApp02.Controllers
             IQueryable<PublishingHouse> source = _db.PublishingHouses;
             vm.Page = Pages.GetPageViewModelAndItems(source, page, out var items);
             vm.ListPublishingHouses = items;
-            return PartialView("ListPublishingHousesPartial", vm);
-        }
+            return PartialView(vm);
+        } 
+        #endregion
+
+        #region Autor
         [HttpGet]
         public IActionResult Autor()
         {
@@ -74,14 +79,14 @@ namespace WebApp02.Controllers
 
             vm.Autor ??= new Autor();
             vm.Autor.BirthDate = vm.Autor.BirthDate.ToUniversalTime();
-            bool isExist = autors.Any(x => 
+            bool isExist = autors.Any(x =>
                 x.FirstName == vm.Autor.FirstName &&
                 x.LastName == vm.Autor.LastName &&
                 x.Patronymic == vm.Autor.Patronymic &&
                 x.BirthDate == vm.Autor.BirthDate);
             if (isExist)
                 ModelState.AddModelError("Autor", "Такой автор уже существует!");
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _db.Autors.Add(vm.Autor);
                 _db.SaveChanges();
@@ -112,6 +117,9 @@ namespace WebApp02.Controllers
             //vm.PublishingHouseId = 0;
             return vm;
         }
+        #endregion
+
+        #region Book
         [HttpGet]
         public IActionResult Book()
         {
@@ -122,7 +130,7 @@ namespace WebApp02.Controllers
         [HttpPost]
         public IActionResult Book(InsertBookViewModel vm)
         {
-            
+
             if (ModelState.IsValid)
             {
                 PublishingHouse ph = _db.PublishingHouses.FirstOrDefault(x => x.Id == vm.PublishingHouseId);
@@ -189,6 +197,54 @@ namespace WebApp02.Controllers
                 PublishingHouseId = pubHouse
             };
             return PartialView("_book", viewModel);
+        }
+        #endregion
+        #endregion
+
+        #region Genre
+        [HttpGet]
+        public IActionResult Genre()
+        {
+            PageViewModel page = Pages.GetPageViewModelAndItems(_db.Genres.AsQueryable(), 1, out var items);
+            BaseInsertViewModel<Genre> model = new()
+            {
+                Item = new(),
+                ListItems = items,
+                Page = page
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult Genre(BaseInsertViewModel<Genre> vm, int page = 1)
+        {
+            var genres = _db.Genres.AsQueryable();
+
+            vm.Item ??= new();
+            vm.Item.Name = vm.Item.Name.Trim();
+            bool isExist = genres.Any(x => x.Name == vm.Item.Name);
+            if (isExist)
+                ModelState.AddModelError("Genre", "Такой жанр уже существует!");
+
+            if (ModelState.IsValid)
+            {
+                _db.Genres.Add(vm.Item);
+                _db.SaveChanges();
+                vm = new()
+                {
+                    Item = new()
+                };
+            }
+            vm.Page = Pages.GetPageViewModelAndItems(genres, page, out var items);
+            vm.ListItems = items;
+            return View(vm);
+        }
+        public IActionResult ListGenresPartial(int page = 1)
+        {
+            BaseInsertViewModel<Genre> vm = new();
+            IQueryable<Genre> source = _db.Genres;
+            vm.Page = Pages.GetPageViewModelAndItems(source, page, out var items);
+            vm.ListItems = items;
+            return PartialView(vm);
         }
         #endregion
     }

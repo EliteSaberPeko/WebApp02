@@ -1,0 +1,19 @@
+﻿@model BaseInsertViewModel<Genre>
+
+<div class="card">
+    <details open>
+        <summary class="card-header">Список жанров</summary>
+        <ul class="list-group list-group-flush">
+            @foreach(var item in Model.ListItems)
+            {
+                <li class="list-group-item">
+                    <div class="d-flex">
+                        <div class="me-auto">@item.Name</div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <hr class="mb-0 mt-1" />
+        <page-link page-model="Model.Page" page-action="ListGenresPartial"></page-link>
+    </details >
+</div>

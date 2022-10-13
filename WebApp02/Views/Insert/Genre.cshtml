@@ -1,0 +1,20 @@
+﻿@model BaseInsertViewModel<Genre>
+
+<form method="post" asp-action="Genre" asp-controller="Insert" class="needs-validation">
+    <div asp-validation-summary=All></div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control has-validation" asp-for="Item.Name" placeholder="Введите название" value="@Model?.Item.Name">
+        
+        <button class="btn btn-outline-success" type="submit">Сохранить</button>
+    </div>
+    <span asp-validation-for="Item.Name"></span>
+</form>
+
+<div id="panel">
+    @await Html.PartialAsync("ListGenresPartial")
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        ChangePage('@Url.Action("ListGenresPartial")');
+    </script>
+}
