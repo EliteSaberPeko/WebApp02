@@ -1,13 +1,13 @@
-﻿@model InsertPublishingHouseViewModel
+﻿@model BaseInsertViewModel<PublishingHouse>
 
 <form method="post" asp-action="PublishingHouse" asp-controller="Insert" class="needs-validation">
     <div asp-validation-summary=All></div>
     <div class="input-group mb-3">
-        <input type="text" class="form-control has-validation" asp-for="PublishingHouse.Name" placeholder="Введите название" value="@Model?.PublishingHouse.Name">
+        <input type="text" class="form-control has-validation" asp-for="Item.Name" placeholder="Введите название" value="@Model?.Item.Name">
         
         <button class="btn btn-outline-success" type="submit">Сохранить</button>
     </div>
-    <span asp-validation-for="PublishingHouse.Name"></span>
+    <span asp-validation-for="Item.Name"></span>
 </form>
 
 <div id="panel">

@@ -1,10 +1,10 @@
-﻿@model InsertPublishingHouseViewModel
+﻿@model BaseInsertViewModel<PublishingHouse>
 
 <div class="card">
     <details open>
         <summary class="card-header">Список издательств</summary>
         <ul class="list-group list-group-flush">
-            @foreach(var item in Model.ListPublishingHouses)
+            @foreach(var item in Model.ListItems)
             {
                 <li class="list-group-item">
                     <div class="d-flex">

@@ -23,38 +23,44 @@ namespace WebApp02.Controllers
         public IActionResult PublishingHouse()
         {
             PageViewModel page = Pages.GetPageViewModelAndItems(_db.PublishingHouses.AsQueryable(), 1, out var items);
-            InsertPublishingHouseViewModel model = new()
+            BaseInsertViewModel<PublishingHouse> model = new()
             {
-                PublishingHouse = new PublishingHouse(),
-                ListPublishingHouses = items,
+                Item = new(),
+                ListItems = items,
                 Page = page
             };
             return View(model);
         }
         [HttpPost]
-        public IActionResult PublishingHouse(InsertPublishingHouseViewModel vm, int page = 1)
+        public IActionResult PublishingHouse(BaseInsertViewModel<PublishingHouse> vm, int page = 1)
         {
             var pubHouses = _db.PublishingHouses.AsQueryable();
+
+            vm.Item ??= new();
+            vm.Item.Name = vm.Item.Name.Trim();
+            bool isExist = pubHouses.Any(x => x.Name == vm.Item.Name);
+            if (isExist)
+                ModelState.AddModelError("PublishingHouse", "Такой издатель уже существует!");
+
             if (ModelState.IsValid)
             {
-                _db.PublishingHouses.Add(vm.PublishingHouse);
+                _db.PublishingHouses.Add(vm.Item);
                 _db.SaveChanges();
                 vm = new()
                 {
-                    PublishingHouse = new PublishingHouse()
+                    Item = new()
                 };
-                //return RedirectToAction("Index", "Home");
             }
             vm.Page = Pages.GetPageViewModelAndItems(pubHouses, page, out var items);
-            vm.ListPublishingHouses = items;
+            vm.ListItems = items;
             return View(vm);
         }
         public IActionResult ListPublishingHousesPartial(int page = 1)
         {
-            InsertPublishingHouseViewModel vm = new();
+            BaseInsertViewModel<PublishingHouse> vm = new();
             IQueryable<PublishingHouse> source = _db.PublishingHouses;
             vm.Page = Pages.GetPageViewModelAndItems(source, page, out var items);
-            vm.ListPublishingHouses = items;
+            vm.ListItems = items;
             return PartialView(vm);
         } 
         #endregion
@@ -63,59 +69,49 @@ namespace WebApp02.Controllers
         [HttpGet]
         public IActionResult Autor()
         {
-            PageViewModel page = Pages.GetPageViewModelAndItems(_db.Autors.AsQueryable(), 1, out List<Autor> items);
-            InsertAutorViewModel vm = new()
+            PageViewModel page = Pages.GetPageViewModelAndItems(_db.Autors.AsQueryable(), 1, out var items);
+            BaseInsertViewModel<Autor> vm = new()
             {
-                Autor = new Autor(),
-                ListAutors = items,
+                Item = new(),
+                ListItems = items,
                 Page = page
             };
             return View(vm);
         }
         [HttpPost]
-        public IActionResult Autor(InsertAutorViewModel vm, int page = 1)
+        public IActionResult Autor(BaseInsertViewModel<Autor> vm, int page = 1)
         {
             var autors = _db.Autors.AsQueryable();
 
-            vm.Autor ??= new Autor();
-            vm.Autor.BirthDate = vm.Autor.BirthDate.ToUniversalTime();
+            vm.Item ??= new();
+            vm.Item.BirthDate = vm.Item.BirthDate.ToUniversalTime();
+            vm.Item.FirstName = vm.Item.FirstName?.Trim();
+            vm.Item.LastName = vm.Item.LastName?.Trim();
+            vm.Item.Patronymic = vm.Item.Patronymic?.Trim();
             bool isExist = autors.Any(x =>
-                x.FirstName == vm.Autor.FirstName &&
-                x.LastName == vm.Autor.LastName &&
-                x.Patronymic == vm.Autor.Patronymic &&
-                x.BirthDate == vm.Autor.BirthDate);
+                x.FirstName == vm.Item.FirstName &&
+                x.LastName == vm.Item.LastName &&
+                x.Patronymic == vm.Item.Patronymic &&
+                x.BirthDate == vm.Item.BirthDate);
             if (isExist)
                 ModelState.AddModelError("Autor", "Такой автор уже существует!");
             if (ModelState.IsValid)
             {
-                _db.Autors.Add(vm.Autor);
+                _db.Autors.Add(vm.Item);
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
             vm.Page = Pages.GetPageViewModelAndItems(autors, page, out var items);
-            vm.ListAutors = items;
+            vm.ListItems = items;
             return View(vm);
         }
         public IActionResult ListAutorsPartial(int page = 1)
         {
-            InsertAutorViewModel vm = new InsertAutorViewModel();
+            BaseInsertViewModel<Autor> vm = new();
             IQueryable<Autor> source = _db.Autors;
             vm.Page = Pages.GetPageViewModelAndItems(source, page, out var items);
-            vm.ListAutors = items;
+            vm.ListItems = items;
             return PartialView(vm);
-        }
-        private InsertBookViewModel GetInsertBookViewModel(ref InsertBookViewModel vm)
-        {
-            IEnumerable<PublishingHouse> pubHouses = _db.PublishingHouses.AsEnumerable();
-            IEnumerable<Autor> autors = _db.Autors.AsEnumerable();
-            IEnumerable<Genre> genres = _db.Genres.AsEnumerable();
-            vm.PublishingHouses = pubHouses.ToDictionary(key => key.Id, val => val.Name);
-            vm.Autors = autors.ToDictionary(key => key.Id, val => val.FullName);
-            vm.Genres = genres.ToDictionary(key => key.Id, val => val.Name);
-            vm.AutorsIds ??= new List<int>();
-            vm.GenresIds ??= new List<int>();
-            //vm.PublishingHouseId = 0;
-            return vm;
         }
         #endregion
 
@@ -145,6 +141,19 @@ namespace WebApp02.Controllers
             }
             GetInsertBookViewModel(ref vm);
             return View(vm);
+        }
+        private InsertBookViewModel GetInsertBookViewModel(ref InsertBookViewModel vm)
+        {
+            IEnumerable<PublishingHouse> pubHouses = _db.PublishingHouses.AsEnumerable();
+            IEnumerable<Autor> autors = _db.Autors.AsEnumerable();
+            IEnumerable<Genre> genres = _db.Genres.AsEnumerable();
+            vm.PublishingHouses = pubHouses.ToDictionary(key => key.Id, val => val.Name);
+            vm.Autors = autors.ToDictionary(key => key.Id, val => val.FullName);
+            vm.Genres = genres.ToDictionary(key => key.Id, val => val.Name);
+            vm.AutorsIds ??= new List<int>();
+            vm.GenresIds ??= new List<int>();
+            //vm.PublishingHouseId = 0;
+            return vm;
         }
         #region Поиск автора
         public IActionResult SearchAutor(string[] data)
@@ -220,7 +229,7 @@ namespace WebApp02.Controllers
             var genres = _db.Genres.AsQueryable();
 
             vm.Item ??= new();
-            vm.Item.Name = vm.Item.Name.Trim();
+            vm.Item.Name = vm.Item.Name?.Trim();
             bool isExist = genres.Any(x => x.Name == vm.Item.Name);
             if (isExist)
                 ModelState.AddModelError("Genre", "Такой жанр уже существует!");
