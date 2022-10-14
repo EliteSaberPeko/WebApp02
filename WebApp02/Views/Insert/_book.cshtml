@@ -3,9 +3,9 @@
 <form method="post" asp-action="Book" asp-controller="Insert" class="needs-validation">
     <div asp-validation-summary=All></div>
     <div class="form-floating mb-3">
-        <input type="text" class="form-control has-validation" asp-for="Book.Title" value="@Model?.Book.Title">
-        <label asp-for=Book.Title></label>
-        <span asp-validation-for="Book.Title" />
+        <input type="text" class="form-control has-validation" asp-for="Item.Title" value="@Model?.Item.Title">
+        <label asp-for=Item.Title></label>
+        <span asp-validation-for="Item.Title" />
     </div>
     <div class="form-floating mb-3">
         <select class="form-select" asp-for=PublishingHouseId>
@@ -21,28 +21,28 @@
                 }
             }
         </select>
-        <label asp-for=Book.PublishingHouse></label>
+        <label asp-for=Item.PublishingHouse></label>
     </div>
     
     <div class="form-floating mb-3">
-        <input type="number" min=0 max=9999 step=1 class="form-control has-validation" asp-for="Book.PublicationYear" value="@Model?.Book.PublicationYear">
-        <label asp-for=Book.PublicationYear></label>
-        <span asp-validation-for="Book.PublicationYear" />
+        <input type="number" min=0 max=9999 step=1 class="form-control has-validation" asp-for="Item.PublicationYear" value="@Model?.Item.PublicationYear">
+        <label asp-for=Item.PublicationYear></label>
+        <span asp-validation-for="Item.PublicationYear" />
     </div>
     <div class="form-floating mb-3">
-        <textarea class="form-control has-validation" asp-for="Book.Description" value="@Model?.Book.Description"></textarea>
-        <label asp-for=Book.Description></label>
-        <span asp-validation-for="Book.Description" />
+        <textarea class="form-control has-validation" asp-for="Item.Description" value="@Model?.Item.Description"></textarea>
+        <label asp-for=Item.Description></label>
+        <span asp-validation-for="Item.Description" />
     </div>
     <div class="form-floating mb-3">
-        <input type="number" min=0 class="form-control has-validation" asp-for="Book.Count" value="@Model?.Book.Count">
-        <label asp-for=Book.Count></label>
-        <span asp-validation-for="Book.Count" />
+        <input type="number" min=0 class="form-control has-validation" asp-for="Item.Count" value="@Model?.Item.Count">
+        <label asp-for=Item.Count></label>
+        <span asp-validation-for="Item.Count" />
     </div>
     <div class="form-floating mb-3">
-        <input type="text" min=0 step=0.01 class="form-control has-validation" asp-for="Book.Price" value="@Model?.Book.Price" onkeyup="this.value = this.value.replace(/[^\d,]/g,'');">
-        <label asp-for=Book.Price></label>
-        <span asp-validation-for="Book.Price" />
+        <input type="text" min=0 step=0.01 class="form-control has-validation" asp-for="Item.Price" value="@Model?.Item.Price" onkeyup="this.value = this.value.replace(/[^\d,]/g,'');">
+        <label asp-for=Item.Price></label>
+        <span asp-validation-for="Item.Price" />
     </div>
     <div class="form-group mb-3">
         <details open>

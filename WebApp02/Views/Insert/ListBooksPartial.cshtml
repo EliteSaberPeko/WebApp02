@@ -1,0 +1,21 @@
+﻿@model InsertBookViewModel
+
+<div class="card">
+    <details open>
+        <summary class="card-header">Список книг</summary>
+        <ul class="list-group list-group-flush">
+            @foreach(var item in Model.ListItems)
+            {
+                <li class="list-group-item">
+                    <div class="d-flex">
+                        <div class="me-auto">@item.Title</div>
+                        <div>@string.Join(", ", item.Autors?.Select(x => x.FullName))</div>
+                        <div>@item.PublishingHouse?.Name | @item.PublicationYear</div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <hr class="mb-0 mt-1" />
+        <page-link page-model="Model.Page" page-action="ListBooksPartial"></page-link>
+    </details >
+</div>

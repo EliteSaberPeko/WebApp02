@@ -17,7 +17,7 @@ function searchAutor(ids, arrayIds, url) {
         type: 'POST',
         data: data,
         success: function (data) {
-            $('#panel').html(data);
+            $('#panelSearch').html(data);
         },
         failure: function (response) {
             alert("failure");
@@ -39,7 +39,7 @@ function ChangePage(url) {
             cache: false,
             data: { "page": page },
             success: function (data) {
-                $('#panel').html(data);
+                $('#panelPage').html(data);
             },
             failure: function (response) {
                 alert("failure");

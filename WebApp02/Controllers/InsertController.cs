@@ -95,6 +95,7 @@ namespace WebApp02.Controllers
                 x.BirthDate == vm.Item.BirthDate);
             if (isExist)
                 ModelState.AddModelError("Autor", "Такой автор уже существует!");
+
             if (ModelState.IsValid)
             {
                 _db.Autors.Add(vm.Item);
@@ -119,26 +120,46 @@ namespace WebApp02.Controllers
         [HttpGet]
         public IActionResult Book()
         {
-            InsertBookViewModel vm = new InsertBookViewModel();
+            PageViewModel page = Pages.GetPageViewModelAndItems(_db.Books.AsQueryable(), 1, out var items);
+            InsertBookViewModel vm = new()
+            {
+                Item = new(),
+                ListItems = items,
+                Page = page
+            };
+            //InsertBookViewModel vm = new();
             GetInsertBookViewModel(ref vm);
             return View(vm);
         }
         [HttpPost]
-        public IActionResult Book(InsertBookViewModel vm)
+        public IActionResult Book(InsertBookViewModel vm, int page = 1)
         {
+            var books = _db.Books.AsQueryable();
+            
+            vm.Item ??= new();
+            vm.Item.Title = vm.Item.Title?.Trim();
+            vm.Item.Description = vm.Item.Description?.Trim();
+            bool isExist = books.Any(x =>
+                x.Title == vm.Item.Title &&
+                x.Description == vm.Item.Description &&
+                x.PublicationYear == vm.Item.PublicationYear);
+            if (isExist)
+                ModelState.AddModelError("Autor", "Такой автор уже существует!");
 
             if (ModelState.IsValid)
             {
-                PublishingHouse ph = _db.PublishingHouses.FirstOrDefault(x => x.Id == vm.PublishingHouseId);
                 List<Autor> autors = _db.Autors.Where(x => vm.AutorsIds.Contains(x.Id)).ToList();
                 List<Genre> genres = _db.Genres.Where(x => vm.GenresIds.Contains(x.Id)).ToList();
-                vm.Book.PublishingHouse = ph;
-                vm.Book.Autors = autors;
-                vm.Book.Genres = genres;
-                _db.Books.Add(vm.Book);
+                PublishingHouse ph = _db.PublishingHouses.FirstOrDefault(x => x.Id == vm.PublishingHouseId);
+                vm.Item.PublishingHouse = ph;
+                vm.Item.Autors = autors;
+                vm.Item.Genres = genres;
+                _db.Books.Add(vm.Item);
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
+            vm.Page = Pages.GetPageViewModelAndItems(books, page, out var items);
+            vm.ListItems = items;
             GetInsertBookViewModel(ref vm);
             return View(vm);
         }
@@ -148,12 +169,21 @@ namespace WebApp02.Controllers
             IEnumerable<Autor> autors = _db.Autors.AsEnumerable();
             IEnumerable<Genre> genres = _db.Genres.AsEnumerable();
             vm.PublishingHouses = pubHouses.ToDictionary(key => key.Id, val => val.Name);
-            vm.Autors = autors.ToDictionary(key => key.Id, val => val.FullName);
+            vm.Autors = autors.ToDictionary(key => key.Id, val => $"{val.FullName} | {val.BirthDate.ToLongDateString()}");
             vm.Genres = genres.ToDictionary(key => key.Id, val => val.Name);
             vm.AutorsIds ??= new List<int>();
             vm.GenresIds ??= new List<int>();
             //vm.PublishingHouseId = 0;
             return vm;
+        }
+        public IActionResult ListBooksPartial(int page = 1)
+        {
+            InsertBookViewModel vm = new();
+            IQueryable<Book> source = _db.Books;
+            vm.Page = Pages.GetPageViewModelAndItems(source, page, out var items);
+            vm.ListItems = items;
+            GetInsertBookViewModel(ref vm);
+            return PartialView(vm);
         }
         #region Поиск автора
         public IActionResult SearchAutor(string[] data)
@@ -194,7 +224,7 @@ namespace WebApp02.Controllers
             };
             InsertBookViewModel viewModel = new()
             {
-                Book = book,
+                Item = book,
                 Autors = result.ToDictionary(key => key.Id, val => val.FullName),
                 Genres = genres.ToDictionary(key => key.Id, val => val.Name),
                 //AutorsSelected = selectedAutors.Select(x => x.Id),

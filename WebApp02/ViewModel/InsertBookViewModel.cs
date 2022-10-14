@@ -4,9 +4,9 @@ using WebApp02.Models;
 
 namespace WebApp02.ViewModel
 {
-    public class InsertBookViewModel
+    public class InsertBookViewModel : BaseInsertViewModel<Book>
     {
-        public Book Book { get; set; } = new Book();
+        //public Book Book { get; set; } = new Book();
         /*public IEnumerable<PublishingHouse> PublishingHouses { get; set; }
         public IEnumerable<Autor> Autors { get; set; }
         public IEnumerable<Genre> Genres { get; set; }*/

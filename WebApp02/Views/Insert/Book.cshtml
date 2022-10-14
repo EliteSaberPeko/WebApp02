@@ -3,16 +3,21 @@
   <input type="text" class="form-control" placeholder="Введите ФИО" aria-label="Введите ФИО" aria-describedby="btnFormAjax" id="searchAutor">
   <button class="btn btn-outline-primary" type="button" id="btnFormAjax">Поиск</button>
 </div>
-<div class="row pr-3 pl-3" id="panel">
-    @Html.Partial("_book")
+<div class="row pr-3 pl-3" id="panelSearch">
+    @await Html.PartialAsync("_book")
 </div>
+
+<div id="panelPage" class="mt-3">
+    @await Html.PartialAsync("ListBooksPartial")
+</div>
+
 @section Scripts{
     <script type="text/javascript">
 
 $('#btnFormAjax').on('click', function () {
  
-        let ids = ['searchAutor', 'Book_Title', 'PublishingHouseId', 'Book_PublicationYear', 'Book_Description',
-            'Book_Count', 'Book_Price'];
+        let ids = ['searchAutor', 'Item_Title', 'PublishingHouseId', 'Item_PublicationYear', 'Item_Description',
+            'Item_Count', 'Item_Price'];
         let arrayIds = ['AutorsIds', 'GenresIds'];
         searchAutor(ids, arrayIds, '@Url.Action("SearchAutor")');
       //  let selectedAutors = $('#AutorsIds').val();
@@ -42,5 +47,6 @@ $('#btnFormAjax').on('click', function () {
       //  });
  
 });
+    ChangePage('@Url.Action("ListBooksPartial")');
     </script>
 }
