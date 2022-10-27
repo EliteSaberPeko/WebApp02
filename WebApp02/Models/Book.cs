@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebApp02.Interfaces;
 
 namespace WebApp02.Models
 {
-    public class Book
+    public class Book : IModel
     {
         public int Id { get; set; }
 

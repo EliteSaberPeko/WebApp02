@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebApp02.Interfaces;
 
 namespace WebApp02.Models
 {
-    public class Autor
+    public class Autor : IModel
     {
         public int Id { get; set; }
 

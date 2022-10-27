@@ -1,0 +1,21 @@
+﻿@model BaseInsertViewModel<PublishingHouse>
+
+<form method="post" asp-action="PublishingHouse" asp-controller="Update" class="needs-validation">
+    <div asp-validation-summary=All></div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control has-validation" asp-for="Item.Id" value="@Model?.Item.Id" hidden>
+        <input type="text" class="form-control has-validation" asp-for="Item.Name" placeholder="Введите название" value="@Model?.Item.Name">
+        
+        <button class="btn btn-outline-success" type="submit">Сохранить</button>
+    </div>
+    <span asp-validation-for="Item.Name"></span>
+</form>
+
+<div id="panelPage">
+    @await Html.PartialAsync("ListPublishingHousesPartial")
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        ChangePage('@Url.Action("ListPublishingHousesPartial")');
+    </script>
+}

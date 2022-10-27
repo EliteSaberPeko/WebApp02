@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using WebApp02.Interfaces;
 namespace WebApp02.Models
 {
-    public class PublishingHouse
+    public class PublishingHouse : IModel
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Название обязательно для заполнения")]

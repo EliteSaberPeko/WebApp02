@@ -1,6 +1,7 @@
-﻿namespace WebApp02.Models
+﻿using WebApp02.Interfaces;
+namespace WebApp02.Models
 {
-    public class Cart
+    public class Cart : IModel
     {
         public int Id { get; set; }
         public decimal Sum { get; set; }

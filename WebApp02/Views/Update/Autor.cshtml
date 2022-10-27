@@ -1,7 +1,8 @@
 ﻿@model BaseInsertViewModel<Autor>
 
-<form method="post" asp-action="Autor" asp-controller="Insert" class="needs-validation mb-3">
+<form method="post" asp-action="Autor" asp-controller="Update" class="needs-validation mb-3">
     <div asp-validation-summary=All></div>
+    <input type="text" class="form-control has-validation" asp-for="Item.Id" value="@Model?.Item.Id" hidden>
     <div class="form-floating mb-3">
         <input type="text" class="form-control has-validation" asp-for="Item.LastName" placeholder="Введите фамилию" value="@Model?.Item.LastName">
         <label asp-for=Item.LastName></label>

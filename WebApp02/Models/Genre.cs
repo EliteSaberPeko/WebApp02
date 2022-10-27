@@ -1,6 +1,7 @@
-﻿namespace WebApp02.Models
+﻿using WebApp02.Interfaces;
+namespace WebApp02.Models
 {
-    public class Genre
+    public class Genre : IModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
