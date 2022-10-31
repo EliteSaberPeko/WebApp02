@@ -1,0 +1,83 @@
+﻿@model InsertBookViewModel
+
+<div asp-validation-summary=All></div>
+<input type="text" class="form-control has-validation" asp-for="Item.Id" value="@Model?.Item.Id" hidden>
+<div class="form-floating mb-3">
+    <input type="text" class="form-control has-validation" asp-for="Item.Title" value="@Model?.Item.Title">
+    <label asp-for=Item.Title></label>
+    <span asp-validation-for="Item.Title" />
+</div>
+<div class="form-floating mb-3">
+    <select class="form-select" asp-for=PublishingHouseId>
+        @foreach(var item in Model.PublishingHouses)
+        {
+            if (Model.PublishingHouseId == item.Key)
+            {
+                <option value=@item.Key selected>@item.Value</option>
+            }
+            else
+            {
+                <option value=@item.Key>@item.Value</option>
+            }
+        }
+    </select>
+    <label asp-for=Item.PublishingHouse></label>
+</div>
+    
+<div class="form-floating mb-3">
+    <input type="number" min=0 max=9999 step=1 class="form-control has-validation" asp-for="Item.PublicationYear" value="@Model?.Item.PublicationYear">
+    <label asp-for=Item.PublicationYear></label>
+    <span asp-validation-for="Item.PublicationYear" />
+</div>
+<div class="form-floating mb-3">
+    <textarea class="form-control has-validation" asp-for="Item.Description" value="@Model?.Item.Description"></textarea>
+    <label asp-for=Item.Description></label>
+    <span asp-validation-for="Item.Description" />
+</div>
+<div class="form-floating mb-3">
+    <input type="number" min=0 class="form-control has-validation" asp-for="Item.Count" value="@Model?.Item.Count">
+    <label asp-for=Item.Count></label>
+    <span asp-validation-for="Item.Count" />
+</div>
+<div class="form-floating mb-3">
+    <input type="text" min=0 step=0.01 class="form-control has-validation" asp-for="Item.Price" value="@Model?.Item.Price" onkeyup="this.value = this.value.replace(/[^\d,]/g,'');">
+    <label asp-for=Item.Price></label>
+    <span asp-validation-for="Item.Price" />
+</div>
+<div class="form-group mb-3">
+    <details open>
+        <summary class="input-group-text">Список авторов</summary>
+        <select class="form-select" size="5" multiple asp-for=AutorsIds>
+            @foreach(var item in Model.Autors)
+            {
+                if (Model.AutorsIds.Contains(item.Key))
+                {
+                    <option selected value=@item.Key>@item.Value</option>
+                }
+                else
+                {
+                    <option value=@item.Key>@item.Value</option>
+                }
+            }
+        </select>
+    </details>
+</div>
+<div class="form-group mb-3">
+    <details open>
+        <summary class="input-group-text">Список жанров</summary>
+        <select class="form-select" size="5" multiple asp-for=GenresIds>
+            @foreach(var item in Model.Genres)
+            {
+                if (Model.GenresIds.Contains(item.Key))
+                {
+                    <option selected value=@item.Key>@item.Value</option>
+                }
+                else
+                {
+                    <option value=@item.Key>@item.Value</option>
+                }
+            }
+        </select>
+    </details>
+</div>
+<button class="btn btn-outline-success" type="submit">Сохранить</button>

@@ -21,6 +21,7 @@ namespace WebApp02.Models
         [Display(Name = "Отчество")]
         [MaxLength(30, ErrorMessage = "В отчестве допустимо до 30 символов")]
         public string? Patronymic { get; set; }
+
         [Required(ErrorMessage = "Дата рождения обязательна для заполнения")]
         [Display(Name = "Дата рождения")]
         public DateTime BirthDate { get; set; }

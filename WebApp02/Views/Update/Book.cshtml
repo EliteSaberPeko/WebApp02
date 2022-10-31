@@ -4,7 +4,8 @@
   <button class="btn btn-outline-primary" type="button" id="btnFormAjax">Поиск</button>
 </div>
 <div class="row pr-3 pl-3" id="panelSearch">
-    <form method="post" asp-action="Book" asp-controller="Insert" class="needs-validation">
+    <form method="post" asp-action="Book" asp-controller="Update" class="needs-validation">
+        <input type="text" class="form-control has-validation" asp-for="Item.Id" value="@Model?.Item.Id" hidden>
         @await Html.PartialAsync("_book")
     </form>
 </div>
@@ -22,7 +23,6 @@ $('#btnFormAjax').on('click', function () {
             'Item_Count', 'Item_Price'];
         let arrayIds = ['AutorsIds', 'GenresIds'];
         searchAutor(ids, arrayIds, '@Url.Action("SearchAutor")');
- 
 });
     ChangePage('@Url.Action("ListBooksPartial")');
     </script>

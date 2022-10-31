@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApp02.Models;
 using WebApp02.Utils;
 using WebApp02.ViewModel;
@@ -67,6 +68,54 @@ namespace WebApp02.Controllers
         {
             IQueryable<Autor> source = _db.Autors;
             var vm = Pages.GetBaseViewModel(source, page);
+            return PartialView(vm);
+        }
+        #endregion
+
+        #region Book
+        public IActionResult SearchAutor(string[] data)
+        {
+            var viewModel = InsertController.GetViewModelForSearchAutor(data, _db);
+            return PartialView("_book", viewModel);
+        }
+        [HttpGet]
+        public IActionResult Book(int id)
+        {
+            PageViewModel page = Pages.GetPageViewModelAndItems(_db.Books.AsQueryable(), 1, out var items);
+            InsertBookViewModel vm = new()
+            {
+                Item = new(),
+                ListItems = items.Include(x => x.Autors),
+                Page = page
+            };
+            InsertController.GetInsertBookViewModel(ref vm, _db);
+            var item = _db.Books.Include(x => x.Autors).Include(x => x.Genres).Include(x => x.PublishingHouse).FirstOrDefault(x => x.Id == id);
+            if (item == null)
+                return RedirectToAction("Book", "List");
+            else
+            {
+                vm.Item = item;
+                vm.AutorsIds = item.Autors.Select(x => x.Id);
+                vm.GenresIds = item.Genres.Select(x => x.Id);
+                vm.PublishingHouseId = item.PublishingHouse?.Id ?? 0;
+            }
+            return View(vm);
+        }
+        [HttpPost]
+        public IActionResult Book(InsertBookViewModel vm)
+        {
+            vm = Database.BookUpdate(vm, _db, ModelState, 1);
+            if (ModelState.IsValid)
+                return RedirectToAction("Book", "List");
+            return View(vm);
+        }
+        public IActionResult ListBooksPartial(int page = 1)
+        {
+            InsertBookViewModel vm = new();
+            IQueryable<Book> source = _db.Books;
+            vm.Page = Pages.GetPageViewModelAndItems(source, page, out var items);
+            vm.ListItems = items.Include(x => x.Autors);
+            InsertController.GetInsertBookViewModel(ref vm, _db);
             return PartialView(vm);
         }
         #endregion

@@ -1,0 +1,11 @@
+﻿@model BaseInsertViewModel<Book>
+
+<div id="panelPage">
+    @await Html.PartialAsync("BookPage")
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        ChangePage('@Url.Action("BookPage")');
+    </script>
+}

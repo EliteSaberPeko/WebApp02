@@ -23,24 +23,18 @@ namespace WebApp02.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            IUrlHelper urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
+            //IUrlHelper urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
             output.TagName = "div";
 
             TagBuilder tag = new("ul");
-            tag.AddCssClass("pagination mb-0");
+            tag.AddCssClass("pagination justify-content-center mb-0");
 
             TagBuilder currentItem = CreateTag(PageModel.PageNumber, "current-");
-            if (PageModel.HasPreviousPage)
-            {
-                TagBuilder prevItem = CreateTag(PageModel.PageNumber - 1, "previous-");
-                tag.InnerHtml.AppendHtml(prevItem);
-            }
+            TagBuilder prevItem = PageModel.HasPreviousPage ? CreateTag(PageModel.PageNumber - 1, "previous-") : CreateTag(0, "previous-");
+            tag.InnerHtml.AppendHtml(prevItem);
             tag.InnerHtml.AppendHtml(currentItem);
-            if (PageModel.HasNextPage)
-            {
-                TagBuilder nextItem = CreateTag(PageModel.PageNumber + 1, "next-");
-                tag.InnerHtml.AppendHtml(nextItem);
-            }
+            TagBuilder nextItem = PageModel.HasNextPage ? CreateTag(PageModel.PageNumber + 1, "next-") : CreateTag(0, "next-");
+            tag.InnerHtml.AppendHtml(nextItem);
             output.Content.AppendHtml(tag);
         }
 
@@ -59,8 +53,21 @@ namespace WebApp02.TagHelpers
             }
 
             item.AddCssClass("page-item");
+            if (pageNumber == 0)
+                item.AddCssClass("disabled");
             link.AddCssClass("page-link");
-            link.InnerHtml.Append(pageNumber.ToString());
+            switch (position)
+            {
+                case "previous-":
+                    link.InnerHtml.Append("< Назад");
+                    break;
+                case "next-":
+                    link.InnerHtml.Append("Вперед >");
+                    break;
+                default:
+                    link.InnerHtml.Append(pageNumber.ToString());
+                    break;
+            }
             item.InnerHtml.AppendHtml(link);
             return item;
         }

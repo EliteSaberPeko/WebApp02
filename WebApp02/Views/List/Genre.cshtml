@@ -1,19 +1,11 @@
 ﻿@model BaseInsertViewModel<Genre>
 
-<div class="card">
-    <div class="card-header">Список жанров</div>
-    <ul class="list-group list-group-flush">
-        @foreach(var item in Model.ListItems)
-        {
-            <form method="get" asp-action="Genre" asp-controller="Update" class="needs-validation">
-                <input type="text" class="form-control has-validation" value="@item.Id" name="id" hidden>
-                <li class="list-group-item">
-                    <div class="d-flex">
-                        <div class="me-auto">@item.Name</div>
-                        <button class="btn btn-outline-success" type="submit">Редактировать</button>
-                    </div>
-                </li>
-            </form>
-        }
-    </ul>
+<div id="panelPage">
+    @await Html.PartialAsync("GenrePage")
 </div>
+
+@section Scripts{
+    <script type="text/javascript">
+        ChangePage('@Url.Action("GenrePage")');
+    </script>
+}

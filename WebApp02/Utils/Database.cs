@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
+using WebApp02.Controllers;
 using WebApp02.Models;
 using WebApp02.ViewModel;
 
@@ -22,21 +24,27 @@ namespace WebApp02.Utils
             vm.Item ??= new();
             vm.Item.Name = vm.Item.Name.Trim();
             bool isExist = pubHouses.Any(x => x.Name == vm.Item.Name);
+
             if (isExist)
                 modelState.AddModelError("PublishingHouse", "Такой издатель уже существует!");
+
+            if (!insert && !pubHouses.Any(x => x.Id == vm.Item.Id))
+                modelState.AddModelError("PublishingHouse Update", "Издательство для редактирования не найдено!");
 
             if (modelState.IsValid)
             {
                 if (insert)
-                    CRUD.Insert(db.PublishingHouses, vm.Item);
+                {
+                    db.PublishingHouses.Add(vm.Item);
+                }
                 else
-                    CRUD.Update(db.PublishingHouses, vm.Item);
+                {
+                    var instance = pubHouses.First(x => x.Id == vm.Item.Id);
+                    instance.Name = vm.Item.Name;
+                    db.PublishingHouses.Update(instance);
+                }
 
                 db.SaveChanges();
-                vm = new()
-                {
-                    Item = new()
-                };
             }
             vm.Page = Pages.GetPageViewModelAndItems(pubHouses, page, out var items);
             vm.ListItems = items;
@@ -67,24 +75,97 @@ namespace WebApp02.Utils
                 x.LastName == vm.Item.LastName &&
                 x.Patronymic == vm.Item.Patronymic &&
                 x.BirthDate == vm.Item.BirthDate);
+
             if (isExist)
                 modelState.AddModelError("Autor", "Такой автор уже существует!");
+
+            if (!insert && !autors.Any(x => x.Id == vm.Item.Id))
+                modelState.AddModelError("Autor Update", "Автор для редактирования не найден!");
 
             if (modelState.IsValid)
             {
                 if (insert)
-                    CRUD.Insert(db.Autors, vm.Item);
+                {
+                    db.Autors.Add(vm.Item);
+                }
                 else
-                    CRUD.Update(db.Autors, vm.Item);
+                {
+                    var instance = autors.First(x => x.Id == vm.Item.Id);
+                    instance.FirstName = vm.Item.FirstName;
+                    instance.LastName = vm.Item.LastName;
+                    instance.Patronymic = vm.Item.Patronymic;
+                    instance.BirthDate = vm.Item.BirthDate;
+                    db.Autors.Update(instance);
+                }
 
                 db.SaveChanges();
-                vm = new()
-                {
-                    Item = new()
-                };
             }
             vm.Page = Pages.GetPageViewModelAndItems(autors, page, out var items);
             vm.ListItems = items;
+            return vm;
+        }
+        #endregion
+
+        #region Book
+        public static InsertBookViewModel BookUpdate(InsertBookViewModel vm, ApplicationContext db, ModelStateDictionary modelState, int page = 1)
+        {
+            return Book(vm, db, modelState, false, page);
+        }
+        public static InsertBookViewModel BookInsert(InsertBookViewModel vm, ApplicationContext db, ModelStateDictionary modelState, int page = 1)
+        {
+            return Book(vm, db, modelState, true, page);
+        }
+        private static InsertBookViewModel Book(InsertBookViewModel vm, ApplicationContext db, ModelStateDictionary modelState, bool insert, int page = 1)
+        {
+            var books = db.Books.AsQueryable();
+
+            vm.Item ??= new();
+            vm.Item.Title = vm.Item.Title?.Trim();
+            vm.Item.Description = vm.Item.Description?.Trim();
+            bool isExist = books.Any(x =>
+                x.Title == vm.Item.Title &&
+                x.Description == vm.Item.Description &&
+                x.PublicationYear == vm.Item.PublicationYear &&
+                (x.PublishingHouse != null && x.PublishingHouse.Id == vm.PublishingHouseId) &&
+                (x.Autors.Count == vm.AutorsIds.Count() && x.Autors.All(x => vm.AutorsIds.Contains(x.Id))) &&
+                (x.Genres.Count == vm.GenresIds.Count() && x.Genres.All(x => vm.GenresIds.Contains(x.Id))));
+
+            if (isExist)
+                modelState.AddModelError("Book", "Такая книга уже существует!");
+
+            if(!insert && !books.Any(x => x.Id == vm.Item.Id))
+                modelState.AddModelError("Book Update", "Книга для редактирования не найдена!");
+
+            if (modelState.IsValid)
+            {
+                List<Autor> autors = db.Autors.Where(x => vm.AutorsIds.Contains(x.Id)).OrderBy(x => x.Id).ToList();
+                List<Genre> genres = db.Genres.Where(x => vm.GenresIds.Contains(x.Id)).OrderBy(x => x.Id).ToList();
+                PublishingHouse ph = db.PublishingHouses.FirstOrDefault(x => x.Id == vm.PublishingHouseId);
+                vm.Item.PublishingHouse = ph;
+                vm.Item.Autors = autors;
+                vm.Item.Genres = genres;
+                if (insert)
+                {
+                    db.Books.Add(vm.Item);
+                }
+                else
+                {
+                    var instance = books.Include(x => x.Autors).Include(x => x.Genres).First(x => x.Id == vm.Item.Id);
+                    instance.Autors = autors;
+                    instance.Genres = genres;
+                    instance.PublishingHouse = ph;
+                    instance.Description = vm.Item.Description;
+                    instance.Count = vm.Item.Count;
+                    instance.Title = vm.Item.Title;
+                    instance.Price = vm.Item.Price;
+                    instance.PublicationYear = vm.Item.PublicationYear;
+                    db.Books.Update(instance);
+                }
+                db.SaveChanges();
+            }
+            vm.Page = Pages.GetPageViewModelAndItems(books, page, out var items);
+            vm.ListItems = items;
+            InsertController.GetInsertBookViewModel(ref vm, db);
             return vm;
         }
         #endregion
@@ -108,17 +189,22 @@ namespace WebApp02.Utils
             if (isExist)
                 modelState.AddModelError("Genre", "Такой жанр уже существует!");
 
+            if (!insert && !genres.Any(x => x.Id == vm.Item.Id))
+                modelState.AddModelError("Genre Update", "Жанр для редактирования не найден!");
+
             if (modelState.IsValid)
             {
                 if (insert)
-                    CRUD.Insert(db.Genres, vm.Item);
-                else
-                    CRUD.Update(db.Genres, vm.Item);
-                db.SaveChanges();
-                vm = new()
                 {
-                    Item = new()
-                };
+                    db.Genres.Add(vm.Item);
+                }
+                else
+                {
+                    var instance = genres.First(x => x.Id == vm.Item.Id);
+                    instance.Name = vm.Item.Name;
+                    db.Genres.Update(instance);
+                }
+                db.SaveChanges();
             }
             vm.Page = Pages.GetPageViewModelAndItems(genres, page, out var items);
             vm.ListItems = items;

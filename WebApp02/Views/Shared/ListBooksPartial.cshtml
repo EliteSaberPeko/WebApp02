@@ -1,7 +1,7 @@
 ﻿@model InsertBookViewModel
 
 <div class="card">
-    <details open>
+    <details>
         <summary class="card-header">Список книг</summary>
         <ul class="list-group list-group-flush">
             @foreach(var item in Model.ListItems)
@@ -9,8 +9,7 @@
                 <li class="list-group-item">
                     <div class="d-flex">
                         <div class="me-auto">@item.Title</div>
-                        <div>@string.Join(", ", item.Autors?.Select(x => x.FullName))</div>
-                        <div>@item.PublishingHouse?.Name | @item.PublicationYear</div>
+                        <div>@string.Join(", ", item.Autors?.Select(x => x.FullName)) | @item.PublishingHouse?.Name | @item.PublicationYear</div>
                     </div>
                 </li>
             }

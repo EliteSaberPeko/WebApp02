@@ -1,0 +1,21 @@
+﻿@model BaseInsertViewModel<Autor>
+
+<div class="card border-info">
+    <div class="card-header border-dark">Список авторов</div>
+    <ul class="list-group list-group-flush">
+        @foreach(var item in Model.ListItems)
+        {
+            <form method="get" asp-action="Autor" asp-controller="Update" class="needs-validation">
+                <input type="text" class="form-control has-validation" value="@item.Id" name="id" hidden>
+                <li class="list-group-item">
+                    <div class="d-flex">
+                        <div class="me-auto">@item.FullName</div>
+                        <div class="me-2">@item.BirthDate.ToLongDateString()</div>
+                        <button class="btn btn-outline-success" type="submit">Редактировать</button>
+                    </div>
+                </li>
+            </form>
+        }
+    </ul>
+    <page-link page-model="Model.Page" page-action="AutorPage"></page-link>
+</div>
