@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp02.Controllers;
 using WebApp02.Models;
 using WebApp02.ViewModel;
+using WebApp02.Interfaces;
 
 namespace WebApp02.Utils
 {
@@ -17,6 +18,7 @@ namespace WebApp02.Utils
         {
             return PublishingHouse(vm, db, modelState, true, page);
         }
+        public static void PublishingHouseDelete(ApplicationContext db, int id) => Delete(db, db.PublishingHouses, id);
         private static BaseInsertViewModel<PublishingHouse> PublishingHouse(BaseInsertViewModel<PublishingHouse> vm, ApplicationContext db, ModelStateDictionary modelState, bool insert, int page = 1)
         {
             var pubHouses = db.PublishingHouses.AsQueryable();
@@ -61,6 +63,7 @@ namespace WebApp02.Utils
         {
             return Autor(vm, db, modelState, true, page);
         }
+        public static void AutorDelete(ApplicationContext db, int id) => Delete(db, db.Autors, id);
         private static BaseInsertViewModel<Autor> Autor(BaseInsertViewModel<Autor> vm, ApplicationContext db, ModelStateDictionary modelState, bool insert, int page = 1)
         {
             var autors = db.Autors.AsQueryable();
@@ -115,6 +118,7 @@ namespace WebApp02.Utils
         {
             return Book(vm, db, modelState, true, page);
         }
+        public static void BookDelete(ApplicationContext db, int id) => Delete(db, db.Books, id);
         private static InsertBookViewModel Book(InsertBookViewModel vm, ApplicationContext db, ModelStateDictionary modelState, bool insert, int page = 1)
         {
             var books = db.Books.AsQueryable();
@@ -179,6 +183,7 @@ namespace WebApp02.Utils
         {
             return Genre(vm, db, modelState, true, page);
         }
+        public static void GenreDelete(ApplicationContext db, int id) => Delete(db, db.Genres, id);
         private static BaseInsertViewModel<Genre> Genre(BaseInsertViewModel<Genre> vm, ApplicationContext db, ModelStateDictionary modelState, bool insert, int page = 1)
         {
             var genres = db.Genres.AsQueryable();
@@ -212,5 +217,24 @@ namespace WebApp02.Utils
         }
         #endregion
 
+        private static void Delete<T>(ApplicationContext db, DbSet<T> table, int id) where T : class, IModel
+        {
+            var instance = table.FirstOrDefault(x => x.Id.Equals(id));
+            if (instance != null)
+            {
+                try
+                {
+                    table.Remove(instance);
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("ERROR");
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    
+                }
+            }
+        }
     }
 }

@@ -5,15 +5,17 @@
     <ul class="list-group list-group-flush">
         @foreach(var item in Model.ListItems)
         {
-            <form method="get" asp-action="PublishingHouse" asp-controller="Update" class="needs-validation">
-                <input type="text" class="form-control has-validation" value="@item.Id" name="id" hidden>
-                <li class="list-group-item">
-                    <div class="d-flex">
-                        <div class="me-auto">@item.Name</div>
+            <li class="list-group-item">
+                <div class="d-flex">
+                    <div class="me-auto">@item.Name</div>
+                    <form method="get" asp-action="PublishingHouse" asp-controller="Update" asp-route-id=@item.Id>
                         <button class="btn btn-outline-success" type="submit">Редактировать</button>
-                    </div>
-                </li>
-            </form>
+                    </form>
+                    <form method="post" asp-action="PublishingHouse" asp-controller="Delete" asp-route-id=@item.Id>
+                        <button class="btn btn-outline-danger ms-1" type="submit">Удалить</button>
+                    </form>
+                </div>
+            </li>
         }
     </ul>
     <page-link page-model="Model.Page" page-action="PublishingHousePage"></page-link>
