@@ -16,3 +16,36 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.field-validation-error {
+    color: #b94a48;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+    background: url(../icons/alert.svg);
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 99% 50%;
+}
+
+input.valid {
+    border: 1px solid #16a085;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-errors ul {
+    padding-left: 0;
+    list-style: none;
+}
+
+.validation-summary-errors ul li {
+    background: url(../icons/warning.svg);
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
+    padding-left: 25px;
+}

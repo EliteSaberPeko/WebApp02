@@ -24,7 +24,7 @@ namespace WebApp02.Utils
             var pubHouses = db.PublishingHouses.AsQueryable();
 
             vm.Item ??= new();
-            vm.Item.Name = vm.Item.Name.Trim();
+            vm.Item.Name = vm.Item.Name?.Trim();
             bool isExist = pubHouses.Any(x => x.Name == vm.Item.Name);
 
             if (isExist)
@@ -69,6 +69,7 @@ namespace WebApp02.Utils
             var autors = db.Autors.AsQueryable();
 
             vm.Item ??= new();
+            vm.Item.BirthDate = vm.Item.BirthDate.AddDays(1);
             vm.Item.BirthDate = vm.Item.BirthDate.ToUniversalTime();
             vm.Item.FirstName = vm.Item.FirstName?.Trim();
             vm.Item.LastName = vm.Item.LastName?.Trim();
@@ -124,6 +125,8 @@ namespace WebApp02.Utils
             var books = db.Books.AsQueryable();
 
             vm.Item ??= new();
+            vm.AutorsIds ??= new List<int>();
+            vm.GenresIds ??= new List<int>();
             vm.Item.Title = vm.Item.Title?.Trim();
             vm.Item.Description = vm.Item.Description?.Trim();
             bool isExist = books.Any(x =>

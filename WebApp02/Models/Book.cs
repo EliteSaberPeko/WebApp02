@@ -40,5 +40,7 @@ namespace WebApp02.Models
         public List<Autor> Autors { get; set; } = new List<Autor>();
         [Display(Name = "Список жанров")]
         public List<Genre> Genres { get; set; } = new List<Genre>();
+
+        public List<Cart> Carts { get; set; } = new List<Cart>();
     }
 }

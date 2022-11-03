@@ -5,22 +5,18 @@
     <div class="form-floating mb-3">
         <input type="text" class="form-control has-validation" asp-for="Item.LastName" placeholder="Введите фамилию" value="@Model?.Item.LastName">
         <label asp-for=Item.LastName></label>
-        <span asp-validation-for="Item.LastName" />
     </div>
     <div class="form-floating mb-3">
         <input type="text" class="form-control has-validation" asp-for="Item.FirstName" placeholder="Введите имя" value="@Model?.Item.FirstName">
         <label for="FirstName" asp-for=Item.FirstName></label>
-        <span asp-validation-for="Item.FirstName" />
     </div>
     <div class="form-floating mb-3">
         <input type="text" class="form-control has-validation" asp-for="Item.Patronymic" placeholder="Введите отчество" value="@Model?.Item.Patronymic">
         <label asp-for=Item.Patronymic></label>
-        <span asp-validation-for="Item.Patronymic" />
     </div>
     <div class="form-floating mb-3">
         <input type="date" class="form-control has-validation" asp-for="Item.BirthDate" placeholder="Введите дату рождения" value="@Model?.Item.BirthDate.ToString("yyyy-MM-dd")">
         <label asp-for=Item.BirthDate></label>
-        <span asp-validation-for="Item.BirthDate" />
     </div>
     <button class="btn btn-outline-success" type="submit">Сохранить</button>
 </form>
